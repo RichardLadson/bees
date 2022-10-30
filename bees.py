@@ -2,11 +2,9 @@
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-from dash import Dash, dcc, html, Input, Output 
+from dash import Dash, dcc, html, Input, Output
 
 #Connect to Cloud SQL using the Cloud SQL Python connector
-from google.colab import drive
-drive.mount('/content/drive')
 
 #define your app object
 app = Dash(__name__)
@@ -14,7 +12,7 @@ app = Dash(__name__)
 #--Import and clean data(importing csv into pandas)
 #df = pd.read_csv('bees_data.csv') ?
 #To get data from Cloud Sql use this file 
-df = pd.read_csv('/content/drive/My Drive/Colab Notebooks/dash-plotly-tutorials/bees_data.csv')
+df = pd.read_csv('~/development/gcp/dashboards/bees/bees_data.csv')
 
 #group data by pctOfColonies
 df = df.groupby(['state', 'ansi', 'affectedBy', 'year', 'stateCode'])[['pctOfColonies']].mean()
@@ -57,8 +55,8 @@ def update_graph(option_slctd):
   container = "The year chose by user was: {}".format(option_slctd)
 
   dff = df.copy()
-  dff = dff[dff["Year"] == option_slctd]
-  dff = dff[dff["Affected by"] == "Varroa_mites"]
+  dff = dff[dff["year"] == option_slctd]
+  dff = dff[dff["affectedBy"] == "Varroa_mites"]
 
     #Plotly Express
   fig = px.choropleth(
@@ -75,5 +73,6 @@ def update_graph(option_slctd):
   
   return container, fig
 
-  if __name__ == '__main__':
-  app.run_server()
+if __name__ == '__main__':
+    app.run_server(debug=False)
+
